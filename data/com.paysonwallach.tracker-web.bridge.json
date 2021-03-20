@@ -1,0 +1,7 @@
+{
+  "name": "com.paysonwallach.tracker-web.bridge",
+  "description": "",
+  "path": "@EXECUTABLE_PATH@",
+  "type": "stdio",
+  "allowed_extensions": ["tracker@paysonwallach.com"]
+}
