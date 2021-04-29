@@ -12,16 +12,6 @@ vala = meson.get_compiler('vala')
 
 vapi_dir = join_paths(meson.current_source_dir(), 'vapi')
 
-add_project_arguments(
-  ['-DG_LOG_DOMAIN="com.paysonwallach.tracker-miner-web"'],
-  language:'c'
-)
-
-add_project_arguments(
-  ['--vapidir', vapi_dir],
-  language: 'vala'
-)
-
 gee_dep = dependency('gee-0.8')
 glib_dep = dependency('glib-2.0')
 glib_json_dep = dependency('json-glib-1.0')
@@ -44,6 +34,17 @@ config_inc_dir = include_directories('.')
 config_dep = declare_dependency(
   dependencies: vala.find_library('config', dirs: vapi_dir),
   sources: config_h
+)
+
+add_project_arguments([
+    '-DG_LOG_DOMAIN="@0@"'.format(meson.project_name())
+  ],
+  language:'c'
+)
+
+add_project_arguments(
+  ['--vapidir', vapi_dir],
+  language: 'vala'
 )
 
 bridge_source_files = [
