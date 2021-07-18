@@ -81,6 +81,5 @@ meson.add_install_script(
     get_option('prefix'),
     get_option('libexecdir')
   ),
-  get_option('browsers'),
-  skip_if_destdir: true
+  get_option('browsers')
 )
