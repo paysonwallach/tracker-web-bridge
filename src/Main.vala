@@ -25,16 +25,20 @@ public static LogWriterOutput log_writer_func (LogLevelFlags log_level, LogField
 }
 
 public static int main (string[] argv) {
+    TrackerWeb.Application app;
+
     GLib.Log.set_writer_func (log_writer_func);
 
-    var loop = new MainLoop ();
+    try {
+        app = new TrackerWeb.Application ();
+    } catch (Error e) {
+        error (e.message);
+    }
 
     Unix.signal_add (Posix.Signal.TERM, () => {
-        loop.quit ();
+        app.terminate ();
         return Source.REMOVE;
     });
-    loop.run ();
-    var app = new TrackerWeb.Application ();
 
-    return Posix.EXIT_SUCCESS;
+    return app.run ();
 }

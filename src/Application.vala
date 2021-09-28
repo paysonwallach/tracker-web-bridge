@@ -19,32 +19,35 @@ errordomain QueryError {
     RESOURCE_NOT_FOUND
 }
 
-public class TrackerWeb.Application : Object {
+public class TrackerWeb.Application : GLib.Application {
     private const Tracker.Sparql.ConnectionFlags connection_flags =
         Tracker.Sparql.ConnectionFlags.FTS_ENABLE_STEMMER |
         Tracker.Sparql.ConnectionFlags.FTS_ENABLE_UNACCENT |
         Tracker.Sparql.ConnectionFlags.FTS_ENABLE_STOP_WORDS |
         Tracker.Sparql.ConnectionFlags.FTS_IGNORE_NUMBERS;
 
-    private ExtensionProxy extension = ExtensionProxy.get_default ();
+    private ExtensionProxy extension;
     private Tracker.Sparql.Connection connection;
 
-    construct {
-        initialize_database ();
-        info ("database initialized");
+    public Application () throws GLib.Error {
+        hold ();
 
-        extension.message_received.connect (on_message_received);
-        extension.start_listening.begin ();
-        info ("listening...");
-    }
-
-    private void initialize_database (Cancellable? cancellable = null) throws GLib.Error {
         connection = Tracker.Sparql.Connection.new (
             connection_flags,
             File.new_build_filename (
                 Environment.get_user_cache_dir (), Config.APP_ID),
             Tracker.Sparql.get_ontology_nepomuk (),
             null);
+        info ("database initialized");
+        extension = ExtensionProxy.get_default ();
+
+        extension.message_received.connect (on_message_received);
+        extension.start_listening.begin ();
+        info ("listening...");
+    }
+
+    public void terminate () {
+        release ();
     }
 
     private void on_message_received (string message) {
