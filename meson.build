@@ -47,33 +47,7 @@ add_project_arguments(
   language: 'vala'
 )
 
-bridge_source_files = [
-  'src/Application.vala',
-  'src/ExtensionProxy.vala',
-  'src/Main.vala',
-  'src/Protocol.vala',
-  'src/Utils/Serializable.vala'
-]
-
-dependencies = [
-  gee_dep,
-  glib_dep,
-  glib_json_dep,
-  gio_dep,
-  gio_unix_dep,
-  posix_dep,
-  tracker_dep,
-  config_dep
-]
-
-executable(
-  meson.project_name(),
-  bridge_source_files,
-  include_directories: config_inc_dir,
-  dependencies: dependencies,
-  install: true,
-  install_dir: join_paths(get_option('prefix'), get_option('libexecdir'))
-)
+subdir('src')
 
 meson.add_install_script(
   'meson/post_install.py',
